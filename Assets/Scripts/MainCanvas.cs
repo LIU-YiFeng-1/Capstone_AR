@@ -2,21 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Menu : MonoBehaviour
+public class MainCanvas : MonoBehaviour
 {
-    public GameObject menu;
+    public GameObject menuPanel;
+    public GameObject TutorialGamePanel;
+
+    void Start()
+    {
+        menuPanel.SetActive(true);
+        TutorialGamePanel.SetActive(false);
+    }
 
     public void StartGame() 
     {
         Debug.Log("game started!");
-        menu.SetActive(false);
+        menuPanel.SetActive(false);
     }
 
     public void StartTutorial()
     {
         Debug.Log("tutorial started!");
-        menu.SetActive(false);
-
+        menuPanel.SetActive(false);
+        TutorialGamePanel.SetActive(true);
     }
     public void ExitGame()
     {
