@@ -13,6 +13,8 @@ public class GameControl : MonoBehaviour
     //following is for bullet
     private int bulletDamage = 10;
     //following is for grenade
+    public GameObject grenadePrefab;
+    public float throwForce = 40f;
     private int grenadeDamage = 30;
     public float grenadeCountDown = 2.0f;
     //following is for shield
@@ -44,10 +46,8 @@ public class GameControl : MonoBehaviour
             shieldHp.fillAmount = 1;    
             currentShieldHp = maxShieldHp;
             Debug.Log("shield count -1");
-       
         //}
     }
-
     public void TakeBulletDamage() 
     {   
         RaycastHit hit;
@@ -59,15 +59,12 @@ public class GameControl : MonoBehaviour
             shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
             Debug.Log("Raycast hit robot!");
         }
-
-
         if(currentShieldHp==0) {
             shield.SetActive(false);
             isShieldActive = false;
             currentShieldHp = maxShieldHp;
         }
     }
-
     public void ShieldAction()
     {
         if(isShieldActive) 
@@ -81,6 +78,14 @@ public class GameControl : MonoBehaviour
             }
         }
         Debug.Log("ShieldAction function called");
+    }
+    public void ThrowGrenade()
+    {
+        GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+        Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
+        Debug.Log("grenade throwed");
+
     }
 
 }
