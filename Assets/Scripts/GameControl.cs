@@ -81,11 +81,10 @@ public class GameControl : MonoBehaviour
     }
     public void ThrowGrenade()
     {
-        GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+        GameObject grenade = Instantiate(grenadePrefab, arCamera.transform.position, arCamera.transform.rotation);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
         Debug.Log("grenade throwed");
-
     }
 
 }
