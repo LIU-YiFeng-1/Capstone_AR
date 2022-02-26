@@ -36,16 +36,27 @@ public class GameControl : MonoBehaviour
 
     public void ActivateSheild()
     {
-        shield.SetActive(true);
-        Debug.Log("shield count -1");
-        isShieldActive = true;
+        //if(currentShieldHp > 0 && shieldCountDown >0)
+        //{
+            shield.SetActive(true);
+            isShieldActive = true;
+            shieldHp.fillAmount = 1;    
+            currentShieldHp = maxShieldHp;
+            Debug.Log("shield count -1");
+       
+        //}
     }
 
     public void TakeBulletDamage() 
-    {
+    {   
         currentShieldHp -= bulletDamage;
         shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;
         Debug.Log("player fired, gun is being pressed");
+        if(currentShieldHp==0) {
+            shield.SetActive(false);
+            isShieldActive = false;
+            currentShieldHp = maxShieldHp;
+        }
     }
 
     public void ShieldAction()
@@ -53,14 +64,14 @@ public class GameControl : MonoBehaviour
         if(isShieldActive) 
         {
             shieldCountDown -= Time.deltaTime;
-            if(shieldCountDown < 0)
+            if(shieldCountDown <= 0)
             {
                 shield.SetActive(false);
                 isShieldActive = false;
                 shieldCountDown = 3.0f;
-
             }
         }
+        Debug.Log("ShieldAction function called");
     }
 
 }
