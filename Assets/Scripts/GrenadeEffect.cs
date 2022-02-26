@@ -32,7 +32,7 @@ public class GrenadeEffect : MonoBehaviour
         Debug.Log("BOOM!");
         //show explosion effect
        
-        //Instantiate(explosionEffect, transform.position, transform.rotation);
+        Instantiate(explosionEffect, transform.position, transform.rotation);
         //get nearby objects
             //add force
             //do damage

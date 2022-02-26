@@ -16,7 +16,7 @@ public class GameControl : MonoBehaviour
     public GameObject grenadePrefab;
     public float throwForce = 40f;
     private int grenadeDamage = 30;
-    public float grenadeCountDown = 2.0f;
+    //public float grenadeCountDown = 2.0f;
     //following is for shield
     private int maxShieldHp = 30;
     private int currentShieldHp;
@@ -65,7 +65,7 @@ public class GameControl : MonoBehaviour
             currentShieldHp = maxShieldHp;
         }
     }
-    public void ShieldAction()
+    private void ShieldAction()
     {
         if(isShieldActive) 
         {
@@ -81,7 +81,7 @@ public class GameControl : MonoBehaviour
     }
     public void ThrowGrenade()
     {
-        GameObject grenade = Instantiate(grenadePrefab, arCamera.transform.position, arCamera.transform.rotation);
+        GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
         Debug.Log("grenade throwed");
