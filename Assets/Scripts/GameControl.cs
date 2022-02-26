@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameControl : MonoBehaviour
 {
+    public GameObject arCamera;
     public GameObject shield;
     public Image shieldHp;
     //following is for Hp
@@ -49,9 +50,17 @@ public class GameControl : MonoBehaviour
 
     public void TakeBulletDamage() 
     {   
-        currentShieldHp -= bulletDamage;
-        shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;
+        RaycastHit hit;
         Debug.Log("player fired, gun is being pressed");
+
+        if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        {
+            currentShieldHp -= bulletDamage;
+            shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
+            Debug.Log("Raycast hit robot!");
+        }
+
+
         if(currentShieldHp==0) {
             shield.SetActive(false);
             isShieldActive = false;
