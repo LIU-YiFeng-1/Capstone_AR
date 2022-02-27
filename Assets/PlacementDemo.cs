@@ -4,10 +4,60 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Experimental.XR;
+
 public class PlacementDemo : MonoBehaviour
 {
+    public Rigidbody grenadePrefab;
+    public GameObject cursor;
+    public LayerMask layer;
 
+    private Camera cam;
 
+    void Start()
+    {
+        cam = Camera.main;
+    }
+
+    void Update()
+    {
+        LaunchGrenade();
+    }
+
+    void LaunchGrenade()
+    {
+        Ray camRay = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        
+        if(Physics.Raycast(camRay, out hit, 100f))
+        {
+            cursor.SetActive(true);
+            cursor.transform.position = hit.point + Vector3.up * 0.1f;
+        }
+    }
+
+    Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
+    {
+        //define the distance x and y direction first
+        Vector3 distance = target - origin;
+        Vector3 distnaceXZ = distance;
+        distnaceXZ.y = 0f; //set Y force to zero, and only keeping the X and Z component
+
+        //creat a float variable to represent the distance
+        float horizontalDistance = distnaceXZ.magnitude;
+        float verticalDistance = distance.y;
+
+        //calculating velocity using projectil formula
+        //
+        float horizontalVelocity = horizontalDistance / time;
+        float verticalVelocity = verticalDistance / time + 0.5f * Mathf.Abs(Physics.gravity.y) * time;
+
+        //result to be returned
+        Vector3 result = distnaceXZ.normalized;
+        result *= horizontalVelocity;
+        result.y = verticalVelocity;
+
+        return result;
+    }
 }
 
 
