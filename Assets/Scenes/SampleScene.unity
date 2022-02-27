@@ -2633,6 +2633,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0824c8c0c83d4e944b97ee8d9889c0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grenadePrefab: {fileID: 8236036014340520123, guid: bffa80a345e92b04bacefee5044938f6, type: 3}
+  cursor: {fileID: 251938918}
+  layer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &1318001836
 GameObject:
   m_ObjectHideFlags: 0
