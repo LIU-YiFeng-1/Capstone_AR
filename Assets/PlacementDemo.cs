@@ -9,6 +9,7 @@ public class PlacementDemo : MonoBehaviour
 {
     public Rigidbody grenadePrefab;
     public GameObject cursor;
+    public Transform shootpoint;
     public LayerMask layer;
 
     private Camera cam;
@@ -16,6 +17,7 @@ public class PlacementDemo : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        Debug.Log("PlacementDemo.start has run");
     }
 
     void Update()
@@ -27,12 +29,28 @@ public class PlacementDemo : MonoBehaviour
     {
         Ray camRay = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        
-        if(Physics.Raycast(camRay, out hit, 100f))
+
+        //must implement plane detection then set the plane so that the raycast can work
+        if(Physics.Raycast(camRay, out hit, 100f, layer))
         {
             cursor.SetActive(true);
             cursor.transform.position = hit.point + Vector3.up * 0.1f;
+
+            //target vector = Raycast hit point
+            //start vector = shoopint position
+            //delay for grenade set to 2 sec
+            Vector3 initialVelocity = CalculateVelocity(hit.point, shootpoint.position, 2f);
+
+            if(Input.GetMouseButtonDown(0))
+            {
+                Rigidbody obj = Instantiate(grenadePrefab, shootpoint.position, Quaternion.identity);
+                obj.velocity = initialVelocity;
+            }
+            Debug.Log("PlacementDemo.LaunchGrenade.ifStatement has run");
+
         }
+        Debug.Log("PlacementDemo.LaunchGrenade has run");
+
     }
 
     Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
