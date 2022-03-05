@@ -48,6 +48,9 @@ public class PlacementDemo : MonoBehaviour
             }
             Debug.Log("PlacementDemo.LaunchGrenade.ifStatement has run");
 
+        } else
+        {
+            cursor.SetActive(false);
         }
         Debug.Log("PlacementDemo.LaunchGrenade has run");
 
