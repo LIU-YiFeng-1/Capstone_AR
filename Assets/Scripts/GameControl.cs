@@ -77,20 +77,6 @@ public class GameControl : MonoBehaviour
             Debug.Log("Raycast hit player!");
         }
 
-        // if(isShieldActive && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
-        // {
-        //     currentShieldHp -= bulletDamage;
-        //     shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
-        //     Debug.Log("Raycast hit shield!");
-        // }
-        // //Raycast hit will be replaced by data input from external comms
-        // if((!isShieldActive) && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
-        // {
-        //     currentOppHp -= bulletDamage;
-        //     oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
-        //     Debug.Log("Raycast hit player!");
-        // } 
-
         //actions for shield
         if(currentShieldHp==0) {
             shield.SetActive(false);
@@ -104,24 +90,6 @@ public class GameControl : MonoBehaviour
         }
     }
     
-    // //the following is the origianl working code for shieldHp
-    // public void TakeBulletDamage() 
-    // {   
-    //     RaycastHit hit;
-    //     Debug.Log("player fired, gun is being pressed");
-
-    //     if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
-    //     {
-    //         currentShieldHp -= bulletDamage;
-    //         shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
-    //         Debug.Log("Raycast hit robot!");
-    //     }
-    //     if(currentShieldHp==0) {
-    //         shield.SetActive(false);
-    //         isShieldActive = false;
-    //         currentShieldHp = maxShieldHp;
-    //     }
-    // }
     private void OpponentShieldAction()
     {
         //when the shield is activated, the count down timer for the shield is initialized
