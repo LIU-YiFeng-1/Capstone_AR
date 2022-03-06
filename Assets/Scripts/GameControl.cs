@@ -62,19 +62,34 @@ public class GameControl : MonoBehaviour
         RaycastHit hit;
         Debug.Log("player fired, gun is being pressed");
 
-        if(isShieldActive && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        if(isShieldActive)
         {
-            currentShieldHp -= bulletDamage;
-            shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
-            Debug.Log("Raycast hit shield!");
-        }
-        //Raycast hit will be replaced by data input from external comms
-        if((!isShieldActive) && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+            if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+            {
+                currentShieldHp -= bulletDamage;
+                shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
+                Debug.Log("Raycast hit shield!");
+            }
+        } else
         {
             currentOppHp -= bulletDamage;
             oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
             Debug.Log("Raycast hit player!");
-        } 
+        }
+
+        // if(isShieldActive && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        // {
+        //     currentShieldHp -= bulletDamage;
+        //     shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
+        //     Debug.Log("Raycast hit shield!");
+        // }
+        // //Raycast hit will be replaced by data input from external comms
+        // if((!isShieldActive) && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        // {
+        //     currentOppHp -= bulletDamage;
+        //     oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
+        //     Debug.Log("Raycast hit player!");
+        // } 
 
         //actions for shield
         if(currentShieldHp==0) {
