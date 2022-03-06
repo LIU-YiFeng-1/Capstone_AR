@@ -62,12 +62,27 @@ public class GameControl : MonoBehaviour
         RaycastHit hit;
         Debug.Log("player fired, gun is being pressed");
 
-        if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        if(isShieldActive && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        {
+            currentShieldHp -= bulletDamage;
+            shieldHp.fillAmount = (float)currentShieldHp / (float)maxShieldHp;           
+            Debug.Log("Raycast hit shield!");
+        }
+
+        if(currentShieldHp==0) {
+            shield.SetActive(false);
+            isShieldActive = false;
+            currentShieldHp = maxShieldHp;
+            Debug.Log("shield is down; shield is down due to damage taken!");
+        }
+
+        //Raycast hit will be replaced by data input from external comms
+        if((!isShieldActive) && Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
         {
             currentOppHp -= bulletDamage;
             oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
             Debug.Log("Raycast hit player!");
-        }
+        } 
         if(currentOppHp==0) {
             Debug.Log("Oppenent died!");
         }
