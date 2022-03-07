@@ -62,6 +62,7 @@ public class GameControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PlayerShieldAction();
         OpponentShieldAction();
     }
     public void ActivatePlayerSheild()
