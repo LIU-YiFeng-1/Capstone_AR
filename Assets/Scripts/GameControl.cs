@@ -22,7 +22,6 @@ public class GameControl : MonoBehaviour
     private int maxShieldHp = 30;
     private float shieldCountDownValue = 10.0f; 
     //following is for opponent shield
-    
     public GameObject oppShield;
     public Image oppShieldHp;
     public float oppShieldCountDown; 
@@ -32,7 +31,6 @@ public class GameControl : MonoBehaviour
     private int oppShieldCounter = 3;
     private int currentOppShieldHp;
     private bool isOppShieldActive;
-
     //following is for player shield
     public GameObject playerShield;
     public Image playerShieldHp;
@@ -43,27 +41,39 @@ public class GameControl : MonoBehaviour
     private int playerShieldCounter = 3;
     private int currentPlayerShieldHp;
     private bool isPlayerShieldActive;
+    //the following is for reload and ammo
+    public Text playerAmmoCount;
+    public Text oppAmmoCount;
+    private int initialAmmoCount = 6;
+    private int playerAmmoCountValue;
+    private int oppAmmoCountValue;
+
     // Start is called before the first frame update
     void Start()
     {
+        //game initialization
         currentPlayerHp = maxHp;
-        currentOppHp = maxHp;
         currentPlayerShieldHp = maxShieldHp;
-        currentOppShieldHp = maxShieldHp;
         playerShieldCountDown = shieldCountDownValue;
+        playerAmmoCountValue = initialAmmoCount;
+        currentOppHp = maxHp;
+        currentOppShieldHp = maxShieldHp;
         oppShieldCountDown = shieldCountDownValue;
+        oppAmmoCountValue = initialAmmoCount;
+
 
         playerShield.SetActive(false);
         isPlayerShieldActive = false;
         oppShield.SetActive(false); //set false if using shield button; set true if testing for shield hp
         isOppShieldActive = false;
     }
-
     // Update is called once per frame
     void Update()
     {
         PlayerShieldAction();
         OpponentShieldAction();
+        PlayerUpdateAmmoCountUI();
+        OpponentUpdateAmmoCOuntUI();
     }
     public void ActivatePlayerSheild()
     {
@@ -91,12 +101,57 @@ public class GameControl : MonoBehaviour
             Debug.Log("opponent shield count -1; inside if statement");
         }
     }
+    //all button triger will be replaced by incoming signal from the external comms
+    public void PlayerShoots() 
+    {   
+        RaycastHit hit;
+        Debug.Log("player fired, gun is being pressed, opponent gets hit");
+        playerAmmoCountValue--;
 
-    //player takes damage based on the input signal from external comm only, disable ray cast
-    //only there is a hit registered, then decrement the playerHp
-    public void PlayerTakeBulletDamage() 
+        if(playerAmmoCountValue <= 0)
+        {
+            return;
+        }
+
+        if(isOppShieldActive)
+        {
+            if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+            {
+                currentOppShieldHp -= bulletDamage;
+                oppShieldHp.fillAmount = (float)currentOppShieldHp / (float)maxShieldHp;           
+                Debug.Log("Raycast hit shield!");
+            }
+        } else
+        {
+            if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+            {
+                currentOppHp -= bulletDamage;
+                oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
+                Debug.Log("Raycast hit player!");
+            }
+        }
+
+        //actions for shield
+        if(currentOppShieldHp==0) {
+            oppShield.SetActive(false);
+            isOppShieldActive = false;
+            currentOppShieldHp = maxShieldHp;
+            Debug.Log("shield is down; shield is down due to damage taken!");
+        }
+
+        if(currentOppHp==0) {
+            Debug.Log("Oppenent died!");
+        }
+    }
+    public void OpponentShoots() 
     {   
         Debug.Log("opponent fired, gun is being pressed, player gets hit");
+        oppAmmoCountValue--;
+
+        if(oppAmmoCountValue <= 0)
+        {
+            return;
+        }
 
         if(isPlayerShieldActive)
         {
@@ -122,41 +177,6 @@ public class GameControl : MonoBehaviour
             Debug.Log("player died!");
         }
     }
-    
-
-    public void OpponentTakeBulletDamage() 
-    {   
-        RaycastHit hit;
-        Debug.Log("player fired, gun is being pressed, opponent gets hit");
-
-        if(isOppShieldActive)
-        {
-            if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
-            {
-                currentOppShieldHp -= bulletDamage;
-                oppShieldHp.fillAmount = (float)currentOppShieldHp / (float)maxShieldHp;           
-                Debug.Log("Raycast hit shield!");
-            }
-        } else
-        {
-            currentOppHp -= bulletDamage;
-            oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
-            Debug.Log("Raycast hit player!");
-        }
-
-        //actions for shield
-        if(currentOppShieldHp==0) {
-            oppShield.SetActive(false);
-            isOppShieldActive = false;
-            currentOppShieldHp = maxShieldHp;
-            Debug.Log("shield is down; shield is down due to damage taken!");
-        }
-
-        if(currentOppHp==0) {
-            Debug.Log("Oppenent died!");
-        }
-    }
-    
     private void PlayerShieldAction()
     {
         //when the shield is activated, the count down timer for the shield is initialized
@@ -230,6 +250,101 @@ public class GameControl : MonoBehaviour
             break;
         }
         Debug.Log("ShieldAction function called");
+    }
+    public void PlayerReload()
+    {
+        //just play reloading sound and reloading gun animation
+        if(playerAmmoCountValue <= 0)
+        {
+            Debug.Log("player ammo count is zero, player reloading");
+            Debug.Log("player reloading animation playing... ");
+            playerAmmoCountValue = initialAmmoCount;
+            Debug.Log("player reloaded with 6 ammo");
+        }
+
+    }
+    public void OpponentReload()
+    {
+        //animate an plane and drop supply
+        if(oppAmmoCountValue <= 0)
+        {
+            Debug.Log("opponent ammo count is zero, opponennt reloading");
+            Debug.Log("opponent reloading animation playing....");
+            oppAmmoCountValue = initialAmmoCount;
+            Debug.Log("opponent reloaded with 6 ammo");
+        }
+    }
+    private void PlayerUpdateAmmoCountUI()
+    {
+        switch (playerAmmoCountValue)
+        {
+            case 6:
+                playerAmmoCount.text = "6/6";
+                Debug.Log("update UI for ammo count to 6/6");
+                break;
+            case 5:
+                playerAmmoCount.text = "5/6";
+                Debug.Log("update UI for ammo count to 5/6");
+                break;
+            case 4:
+                playerAmmoCount.text = "4/6";
+                Debug.Log("update UI for ammo count to 4/6");
+                break;
+            case 3:
+                playerAmmoCount.text = "3/6";
+                Debug.Log("update UI for ammo count to 3/6");
+                break;
+            case 2:
+                playerAmmoCount.text = "2/6";
+                Debug.Log("update UI for ammo count to 2/6");
+                break;
+            case 1:
+                playerAmmoCount.text = "1/6";
+                Debug.Log("update UI for ammo count to 1/6");
+                break;
+            case 0:
+                playerAmmoCount.text = "0/6";
+                Debug.Log("update UI for ammo count to 0/6");
+                break;
+            default:
+                break;
+        }
+    }
+    private void OpponentUpdateAmmoCOuntUI()
+    {
+        switch (oppAmmoCountValue)
+        {
+            case 6:
+                oppAmmoCount.text = "6/6";
+                Debug.Log("update UI for ammo count to 6/6");
+                break;
+            case 5:
+                oppAmmoCount.text = "5/6";
+                Debug.Log("update UI for ammo count to 5/6");
+                break;
+            case 4:
+                oppAmmoCount.text = "4/6";
+                Debug.Log("update UI for ammo count to 4/6");
+                break;
+            case 3:
+                oppAmmoCount.text = "3/6";
+                Debug.Log("update UI for ammo count to 3/6");
+                break;
+            case 2:
+                oppAmmoCount.text = "2/6";
+                Debug.Log("update UI for ammo count to 2/6");
+                break;
+            case 1:
+                oppAmmoCount.text = "1/6";
+                Debug.Log("update UI for ammo count to 1/6");
+                break;
+            case 0:
+                oppAmmoCount.text = "0/6";
+                Debug.Log("update UI for ammo count to 0/6");
+                break;
+            default:
+                break;
+        }
     }
     public void ThrowGrenade()
     {
