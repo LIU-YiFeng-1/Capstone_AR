@@ -47,7 +47,7 @@ public class GameControl : MonoBehaviour
     private int initialAmmoCount = 6;
     private int playerAmmoCountValue;
     private int oppAmmoCountValue;
-    public Rigidbody airCraft;
+    public GameObject airCraft;
     public Transform startingReferencePoint;
     public Rigidbody ammoPack;
     public float airCraftForce = 55.0f;
@@ -268,15 +268,17 @@ public class GameControl : MonoBehaviour
 
     }
     public void OpponentReload()
-    {
+    {   
         //animate an plane and drop supply
         if(oppAmmoCountValue <= 0)
-        {
+        {   
             Debug.Log("opponent ammo count is zero, opponennt reloading");
             Debug.Log("opponent reloading animation playing....");
-            Rigidbody obj = Instantiate(airCraft, startingReferencePoint.position, airCraft.transform.rotation); 
+            GameObject obj = Instantiate(airCraft, transform.position, airCraft.transform.rotation); 
             //obj.AddForce(transform.forward * airCraftForce, ForceMode.VelocityChange);
-            obj.AddForce(0,10,55,ForceMode.VelocityChange);
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
+            //rb.AddForce(0,10,55,ForceMode.VelocityChange);
+            rb.AddForce(transform.forward * 55.0f, ForceMode.VelocityChange);
             oppAmmoCountValue = initialAmmoCount;
             Debug.Log("opponent reloaded with 6 ammo");
         }
