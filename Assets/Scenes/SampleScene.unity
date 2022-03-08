@@ -123,6 +123,35 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!21 &47776267
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 'QR_CodeMaterial
+
+    83754'
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: e0296ba7835a4542adb5a52ae9924d8a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &63482804
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,7 +461,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 111081495}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1230959336}
+        m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
+        m_MethodName: OpponentReload
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &111081495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -884,7 +925,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1230959336}
         m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
-        m_MethodName: OpponentTakeBulletDamage
+        m_MethodName: PlayerShoots
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3725,6 +3766,8 @@ MonoBehaviour:
   playerShield1: {fileID: 468493576}
   playerShield2: {fileID: 108532985}
   playerShield3: {fileID: 329249300}
+  playerAmmoCount: {fileID: 1493260207}
+  oppAmmoCount: {fileID: 223974228}
 --- !u!114 &1230959337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4730,7 +4773,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1533971858}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1230959336}
+        m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
+        m_MethodName: PlayerReload
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1533971858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4769,35 +4824,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533971855}
   m_CullTransparentMesh: 1
---- !u!21 &1538482813
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 'QR_CodeMaterial
-
-    68170'
-  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: e0296ba7835a4542adb5a52ae9924d8a, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &1572399291
 GameObject:
   m_ObjectHideFlags: 0
@@ -4883,7 +4909,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1230959336}
         m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
-        m_MethodName: PlayerTakeBulletDamage
+        m_MethodName: OpponentShoots
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5323,7 +5349,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1538482813}
+  - {fileID: 47776267}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
