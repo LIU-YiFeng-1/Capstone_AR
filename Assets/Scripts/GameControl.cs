@@ -48,7 +48,6 @@ public class GameControl : MonoBehaviour
     private int playerAmmoCountValue;
     private int oppAmmoCountValue;
     public GameObject airCraft;
-    public Transform startingReferencePoint;
     public Rigidbody ammoPack;
     public float airCraftForce = 55.0f;
 
@@ -275,10 +274,11 @@ public class GameControl : MonoBehaviour
             Debug.Log("opponent ammo count is zero, opponennt reloading");
             Debug.Log("opponent reloading animation playing....");
             GameObject obj = Instantiate(airCraft, transform.position, airCraft.transform.rotation); 
-            //obj.AddForce(transform.forward * airCraftForce, ForceMode.VelocityChange);
             Rigidbody rb = obj.GetComponent<Rigidbody>();
-            //rb.AddForce(0,10,55,ForceMode.VelocityChange);
-            rb.AddForce(transform.forward * 55.0f, ForceMode.VelocityChange);
+            //rb.AddForce(transform.forward * airCraftForce, ForceMode.VelocityChange);//this only applies a constant .z force
+            //rb.AddForce(0,10,55,ForceMode.VelocityChange); //this addForce will not allow the aircraft to be instantiate with respect to the cam view
+            rb.AddForce(transform.forward * airCraftForce, ForceMode.VelocityChange);
+            rb.AddForce(transform.up * 8.0f, ForceMode.VelocityChange);
             oppAmmoCountValue = initialAmmoCount;
             Debug.Log("opponent reloaded with 6 ammo");
         }
