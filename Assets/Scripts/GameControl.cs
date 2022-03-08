@@ -119,6 +119,8 @@ public class GameControl : MonoBehaviour
         OpponentUpdateAmmoCOuntUI();
         OppenentReloadAction();
         collisionStatus = collisionChecker.GetCollsionStatus();
+
+        LaunchGrenade();
     }
     public void ActivatePlayerSheild()
     {
@@ -415,12 +417,68 @@ public class GameControl : MonoBehaviour
                 break;
         }
     }
-    public void ThrowGrenade()
+    public void ThrowGrenade()//this is a normal throw
     {
         GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
         Debug.Log("grenade throwed");
+    }
+
+    Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
+    {
+        //define the distance x and y direction first
+        Vector3 distance = target - origin;
+        Vector3 distnaceXZ = distance;
+        distnaceXZ.y = 0f; //set Y force to zero, and only keeping the X and Z component
+
+        //creat a float variable to represent the distance
+        float horizontalDistance = distnaceXZ.magnitude;
+        float verticalDistance = distance.y;
+
+        //calculating velocity using projectil formula
+        //
+        float horizontalVelocity = horizontalDistance / time;
+        float verticalVelocity = verticalDistance / time + 0.5f * Mathf.Abs(Physics.gravity.y) * time;
+
+        //result to be returned
+        Vector3 result = distnaceXZ.normalized;
+        result *= horizontalVelocity;
+        result.y = verticalVelocity;
+
+        return result;
+    }
+
+    void LaunchGrenade()
+    {
+        //Ray camRay = arCamera.ScreenPointToRay(transform.position);
+        RaycastHit hit;
+
+        //must implement plane detection then set the plane so that the raycast can work
+        if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        {
+            //cursor.SetActive(true);
+            //cursor.transform.position = hit.point + Vector3.up * 0.1f;
+
+            //target vector = Raycast hit point
+            //start vector = shoopint position
+            //delay for grenade set to 2 sec
+            Vector3 initialVelocity = CalculateVelocity(hit.point, transform.position, 2f);
+
+            if(Input.GetMouseButtonDown(0))
+            {   
+                Rigidbody grenadePrefabRb = grenadePrefab.GetComponent<Rigidbody>();
+                Rigidbody obj = Instantiate(grenadePrefabRb, transform.position, Quaternion.identity);
+                obj.velocity = initialVelocity;
+            }
+            Debug.Log("PlacementDemo.LaunchGrenade.ifStatement has run");
+
+        } else
+        {
+            //cursor.SetActive(false);
+        }
+        Debug.Log("PlacementDemo.LaunchGrenade has run");
+
     }
 
 }
