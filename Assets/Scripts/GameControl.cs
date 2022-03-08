@@ -47,6 +47,10 @@ public class GameControl : MonoBehaviour
     private int initialAmmoCount = 6;
     private int playerAmmoCountValue;
     private int oppAmmoCountValue;
+    public Rigidbody airCraft;
+    public Transform startingReferencePoint;
+    public Rigidbody ammoPack;
+    public float airCraftForce = 55.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -108,7 +112,7 @@ public class GameControl : MonoBehaviour
         Debug.Log("player fired, gun is being pressed, opponent gets hit");
         playerAmmoCountValue--;
 
-        if(playerAmmoCountValue <= 0)
+        if(playerAmmoCountValue < 0)
         {
             return;
         }
@@ -148,7 +152,7 @@ public class GameControl : MonoBehaviour
         Debug.Log("opponent fired, gun is being pressed, player gets hit");
         oppAmmoCountValue--;
 
-        if(oppAmmoCountValue <= 0)
+        if(oppAmmoCountValue < 0)
         {
             return;
         }
@@ -270,6 +274,9 @@ public class GameControl : MonoBehaviour
         {
             Debug.Log("opponent ammo count is zero, opponennt reloading");
             Debug.Log("opponent reloading animation playing....");
+            Rigidbody obj = Instantiate(airCraft, startingReferencePoint.position, airCraft.transform.rotation); 
+            //obj.AddForce(transform.forward * airCraftForce, ForceMode.VelocityChange);
+            obj.AddForce(0,10,55,ForceMode.VelocityChange);
             oppAmmoCountValue = initialAmmoCount;
             Debug.Log("opponent reloaded with 6 ammo");
         }
