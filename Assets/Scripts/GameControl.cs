@@ -48,7 +48,7 @@ public class GameControl : MonoBehaviour
     private int playerAmmoCountValue;
     private int oppAmmoCountValue;
     public GameObject airCraft;
-    public Rigidbody ammoPack;
+    public GameObject ammoPack;
     public float airCraftForce = 55.0f;
 
     // Start is called before the first frame update
@@ -67,6 +67,7 @@ public class GameControl : MonoBehaviour
 
         playerShield.SetActive(false);
         isPlayerShieldActive = false;
+        ammoPack.SetActive(false);
         oppShield.SetActive(false); //set false if using shield button; set true if testing for shield hp
         isOppShieldActive = false;
     }
@@ -281,6 +282,9 @@ public class GameControl : MonoBehaviour
             rb.AddForce(transform.up * 8.0f, ForceMode.VelocityChange);
             oppAmmoCountValue = initialAmmoCount;
             Debug.Log("opponent reloaded with 6 ammo");
+
+            ammoPack.SetActive(true);
+
         }
     }
     private void PlayerUpdateAmmoCountUI()
