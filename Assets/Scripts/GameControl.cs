@@ -54,15 +54,46 @@ public class GameControl : MonoBehaviour
     public Rigidbody ammoPackReferencePoint;
     private bool isReloadEnable;
     public float airCraftForce = 55.0f;
-    private float delay;
     private Vector3 ammoPackInitialLocaiton;
     private bool collisionStatus;
 
+    public void ReStart(){
+        //game initialization
+        Debug.Log("Game reinitialized!");
+        playerShieldCounter = 3;
+        oppShieldCounter = 3;
+        currentPlayerHp = maxHp;
+        currentPlayerShieldHp = maxShieldHp;
+        playerShieldCountDown = shieldCountDownValue;
+        playerAmmoCountValue = initialAmmoCount;
+        currentOppHp = maxHp;
+        currentOppShieldHp = maxShieldHp;
+        oppShieldCountDown = shieldCountDownValue;
+        oppAmmoCountValue = initialAmmoCount;
+        playerHp.fillAmount = 1;
+        oppHp.fillAmount = 1;
+
+        playerShield1.SetActive(true);
+        playerShield2.SetActive(true);
+        playerShield3.SetActive(true);
+        oppShield1.SetActive(true);
+        oppShield2.SetActive(true);
+        oppShield3.SetActive(true);
+
+        playerShield.SetActive(false);
+        isPlayerShieldActive = false;
+        oppShield.SetActive(false); //set false if using shield button; set true if testing for shield hp
+        isOppShieldActive = false;
+        isReloadEnable = false;
+        Debug.Log("game restarted");
+    }
     // Start is called before the first frame update
     void Start()
     {
         //game initialization
-        delay = 2.0f; // delay for ammo pack falling time
+        Debug.Log("Game initialized!");
+        playerShieldCounter = 3;
+        oppShieldCounter = 3;
         currentPlayerHp = maxHp;
         currentPlayerShieldHp = maxShieldHp;
         playerShieldCountDown = shieldCountDownValue;
