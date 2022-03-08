@@ -49,12 +49,17 @@ public class GameControl : MonoBehaviour
     private int oppAmmoCountValue;
     public GameObject airCraft;
     public GameObject ammoPack;
+    private bool isReloadEnable;
     public float airCraftForce = 55.0f;
+    private float delay;
+    private Vector3 ammoPackInitialLocaiton;
+    private Rigidbody ammoPackRB;
 
     // Start is called before the first frame update
     void Start()
     {
         //game initialization
+        delay = 2.0f; // delay for ammo pack falling time
         currentPlayerHp = maxHp;
         currentPlayerShieldHp = maxShieldHp;
         playerShieldCountDown = shieldCountDownValue;
@@ -63,13 +68,15 @@ public class GameControl : MonoBehaviour
         currentOppShieldHp = maxShieldHp;
         oppShieldCountDown = shieldCountDownValue;
         oppAmmoCountValue = initialAmmoCount;
-
+        //ammoPackInitialLocaiton = ammoPack.transform.position;
+        ammoPackRB = ammoPack.GetComponent<Rigidbody>();
 
         playerShield.SetActive(false);
         isPlayerShieldActive = false;
         ammoPack.SetActive(false);
         oppShield.SetActive(false); //set false if using shield button; set true if testing for shield hp
         isOppShieldActive = false;
+        isReloadEnable = false;
     }
     // Update is called once per frame
     void Update()
@@ -78,6 +85,7 @@ public class GameControl : MonoBehaviour
         OpponentShieldAction();
         PlayerUpdateAmmoCountUI();
         OpponentUpdateAmmoCOuntUI();
+        OppenentReloadAction();
     }
     public void ActivatePlayerSheild()
     {
@@ -269,8 +277,16 @@ public class GameControl : MonoBehaviour
     }
     public void OpponentReload()
     {   
-        //animate an plane and drop supply
         if(oppAmmoCountValue <= 0)
+        {
+            isReloadEnable = true;
+        }
+    }
+
+    public void OppenentReloadAction()
+    {   
+        //animate an plane and drop supply
+        if(isReloadEnable == true)
         {   
             Debug.Log("opponent ammo count is zero, opponennt reloading");
             Debug.Log("opponent reloading animation playing....");
@@ -284,8 +300,14 @@ public class GameControl : MonoBehaviour
             Debug.Log("opponent reloaded with 6 ammo");
 
             ammoPack.SetActive(true);
-
+            ammoPackRB.useGravity = true;
         }
+  
+            //ammoPack.transform.position = ammoPackInitialLocaiton;
+            //ammoPackRB.useGravity = false;
+            //ammoPack.SetActive(false);
+
+        isReloadEnable = false;
     }
     private void PlayerUpdateAmmoCountUI()
     {
