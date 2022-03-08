@@ -7,15 +7,15 @@ public class CollisionChecker : MonoBehaviour
     private bool isCollsionDetected = false;
     public void OnCollisionEnter(Collision collision)
     {   
-        if(collision.gameObject.name == "ammoPack")
+        if(collision.gameObject.name == "Ammo_box(Clone)")
         {
             //This is example
-            //Debug.Log("collision detected");
+            Debug.Log("collision detected");
             isCollsionDetected = true;
             //code your thing here
         } else 
         {
-            //Debug.Log("no collsion!");
+            Debug.Log("no collsion!");
             isCollsionDetected = false;
         }
     }

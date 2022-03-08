@@ -51,11 +51,11 @@ public class GameControl : MonoBehaviour
     private int oppAmmoCountValue;
     public GameObject airCraft;
     public GameObject ammoPack;
+    public Rigidbody ammoPackReferencePoint;
     private bool isReloadEnable;
     public float airCraftForce = 55.0f;
     private float delay;
     private Vector3 ammoPackInitialLocaiton;
-    private Rigidbody ammoPackRB;
     private bool collisionStatus;
 
     // Start is called before the first frame update
@@ -72,11 +72,9 @@ public class GameControl : MonoBehaviour
         oppShieldCountDown = shieldCountDownValue;
         oppAmmoCountValue = initialAmmoCount;
         //ammoPackInitialLocaiton = ammoPack.transform.position;
-        ammoPackRB = ammoPack.GetComponent<Rigidbody>();
 
         playerShield.SetActive(false);
         isPlayerShieldActive = false;
-        ammoPack.SetActive(false);
         oppShield.SetActive(false); //set false if using shield button; set true if testing for shield hp
         isOppShieldActive = false;
         isReloadEnable = false;
@@ -303,17 +301,14 @@ public class GameControl : MonoBehaviour
             oppAmmoCountValue = initialAmmoCount;
             Debug.Log("opponent reloaded with 6 ammo");
 
-            ammoPack.SetActive(true);
-            ammoPackRB.useGravity = true;
+            GameObject ammoPackObj = Instantiate(ammoPack, ammoPackReferencePoint.position, ammoPackReferencePoint.rotation);
+            Destroy(ammoPackObj, 3.5f);
         }
         
         if(collisionStatus)
         {
             Debug.Log("Gamecontrol module detects a collsion");
-            ammoPackRB.useGravity = false;
-            ammoPack.SetActive(false);
         }
-            //ammoPack.transform.position = ammoPackInitialLocaiton;
             
         isReloadEnable = false;
     }
