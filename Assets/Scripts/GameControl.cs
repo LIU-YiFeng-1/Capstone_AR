@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static CollisionChecker;
 public class GameControl : MonoBehaviour
 {
+    public CollisionChecker collisionChecker;
     public GameObject arCamera;
     public Image oppHp;
     public Image playerHp;
@@ -54,6 +56,7 @@ public class GameControl : MonoBehaviour
     private float delay;
     private Vector3 ammoPackInitialLocaiton;
     private Rigidbody ammoPackRB;
+    private bool collisionStatus;
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +89,7 @@ public class GameControl : MonoBehaviour
         PlayerUpdateAmmoCountUI();
         OpponentUpdateAmmoCOuntUI();
         OppenentReloadAction();
+        collisionStatus = collisionChecker.GetCollsionStatus();
     }
     public void ActivatePlayerSheild()
     {
@@ -302,11 +306,15 @@ public class GameControl : MonoBehaviour
             ammoPack.SetActive(true);
             ammoPackRB.useGravity = true;
         }
-  
+        
+        if(collisionStatus)
+        {
+            Debug.Log("Gamecontrol module detects a collsion");
+            ammoPackRB.useGravity = false;
+            ammoPack.SetActive(false);
+        }
             //ammoPack.transform.position = ammoPackInitialLocaiton;
-            //ammoPackRB.useGravity = false;
-            //ammoPack.SetActive(false);
-
+            
         isReloadEnable = false;
     }
     private void PlayerUpdateAmmoCountUI()
