@@ -6,6 +6,7 @@ public class MainCanvas : MonoBehaviour
 {
     public GameObject menuPanel;
     public GameObject TutorialGamePanel;
+    //private bool isTutorialStarted = false;
 
     void Start()
     {
@@ -20,10 +21,12 @@ public class MainCanvas : MonoBehaviour
     }
 
     public void StartTutorial()
-    {
+    {   
+        //isTutorialStarted = true;
         Debug.Log("tutorial started!");
         menuPanel.SetActive(false);
         TutorialGamePanel.SetActive(true);
+        //return isTutorialStarted;
     }
     public void ExitGame()
     {

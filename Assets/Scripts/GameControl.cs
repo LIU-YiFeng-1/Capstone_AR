@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static CollisionChecker;
+//using static MainCanvas;
 public class GameControl : MonoBehaviour
 {
     public CollisionChecker collisionChecker;
+    //public MainCanvas tutorialStatus;
     public GameObject arCamera;
     public Image oppHp;
     public Image playerHp;
@@ -17,7 +19,13 @@ public class GameControl : MonoBehaviour
     //following is for bullet
     private int bulletDamage = 10;
     //following is for grenade
+    private int playerGrenadeCounter = 2;
+    private int oppGrenadeCounter = 2;
     public GameObject grenadePrefab;
+    public GameObject playerGrenade1;
+    public GameObject playerGrenade2;
+    public GameObject oppGrenade1;
+    public GameObject oppGrenade2;
     public float throwForce = 40f;
     private int grenadeDamage = 30;
     //following is for general shield status
@@ -57,11 +65,14 @@ public class GameControl : MonoBehaviour
     private Vector3 ammoPackInitialLocaiton;
     private bool collisionStatus;
 
-    public void ReStart(){
+    public void ReStart()
+    {
         //game initialization
         Debug.Log("Game reinitialized!");
         playerShieldCounter = 3;
         oppShieldCounter = 3;
+        playerGrenadeCounter = 2;
+        oppGrenadeCounter = 2;
         currentPlayerHp = maxHp;
         currentPlayerShieldHp = maxShieldHp;
         playerShieldCountDown = shieldCountDownValue;
@@ -79,6 +90,10 @@ public class GameControl : MonoBehaviour
         oppShield1.SetActive(true);
         oppShield2.SetActive(true);
         oppShield3.SetActive(true);
+        playerGrenade1.SetActive(true);
+        playerGrenade2.SetActive(true);
+        oppGrenade1.SetActive(true);
+        oppGrenade2.SetActive(true);
 
         playerShield.SetActive(false);
         isPlayerShieldActive = false;
@@ -94,6 +109,8 @@ public class GameControl : MonoBehaviour
         Debug.Log("Game initialized!");
         playerShieldCounter = 3;
         oppShieldCounter = 3;
+        playerGrenadeCounter = 2;
+        oppGrenadeCounter = 2;
         currentPlayerHp = maxHp;
         currentPlayerShieldHp = maxShieldHp;
         playerShieldCountDown = shieldCountDownValue;
@@ -113,6 +130,7 @@ public class GameControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if(tutorialStatus.StartTutorial()){
         PlayerShieldAction();
         OpponentShieldAction();
         PlayerUpdateAmmoCountUI();
@@ -120,7 +138,8 @@ public class GameControl : MonoBehaviour
         OppenentReloadAction();
         collisionStatus = collisionChecker.GetCollsionStatus();
 
-        LaunchGrenade();
+        ThrowGrenade();
+        //}
     }
     public void ActivatePlayerSheild()
     {
@@ -419,10 +438,27 @@ public class GameControl : MonoBehaviour
     }
     public void ThrowGrenade()//this is a normal throw
     {
-        GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
-        Rigidbody rb = grenade.GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
-        Debug.Log("grenade throwed");
+        if(Input.GetMouseButtonDown(0) && playerGrenadeCounter > 0)
+        {
+            GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+            Rigidbody rb = grenade.GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * throwForce*2, ForceMode.VelocityChange);
+            Debug.Log("grenade throwed");
+            playerGrenadeCounter--;
+        }
+        switch (playerGrenadeCounter)
+        {
+            case 1:
+                playerGrenade2.SetActive(false);
+                Debug.Log("playerGrenade2 gone, playerGrenadeCounter = 1");
+                break;
+            case 0:
+                playerGrenade1.SetActive(false);
+                Debug.Log("playerGrenade1 gone, playerGrenadeCounter = 0");
+                break;
+            default:
+                break;
+        }
     }
 
     Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
@@ -449,13 +485,13 @@ public class GameControl : MonoBehaviour
         return result;
     }
 
-    void LaunchGrenade()
+    public void LaunchGrenade()
     {
         //Ray camRay = arCamera.ScreenPointToRay(transform.position);
         RaycastHit hit;
 
         //must implement plane detection then set the plane so that the raycast can work
-        if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit))
+        if(Physics.Raycast(arCamera.transform.position, arCamera.transform.forward, out hit) && playerGrenadeCounter > 0)
         {
             //cursor.SetActive(true);
             //cursor.transform.position = hit.point + Vector3.up * 0.1f;
@@ -464,21 +500,18 @@ public class GameControl : MonoBehaviour
             //start vector = shoopint position
             //delay for grenade set to 2 sec
             Vector3 initialVelocity = CalculateVelocity(hit.point, transform.position, 2f);
-
-            if(Input.GetMouseButtonDown(0))
-            {   
-                Rigidbody grenadePrefabRb = grenadePrefab.GetComponent<Rigidbody>();
-                Rigidbody obj = Instantiate(grenadePrefabRb, transform.position, Quaternion.identity);
-                obj.velocity = initialVelocity;
-            }
+   
+            Rigidbody grenadePrefabRb = grenadePrefab.GetComponent<Rigidbody>();
+            Rigidbody obj = Instantiate(grenadePrefabRb, transform.position, Quaternion.identity);
+            obj.velocity = initialVelocity;
             Debug.Log("PlacementDemo.LaunchGrenade.ifStatement has run");
+            playerGrenadeCounter--;
 
         } else
         {
             //cursor.SetActive(false);
         }
         Debug.Log("PlacementDemo.LaunchGrenade has run");
-
     }
 
 }
