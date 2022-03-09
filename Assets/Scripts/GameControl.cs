@@ -138,7 +138,8 @@ public class GameControl : MonoBehaviour
         OppenentReloadAction();
         collisionStatus = collisionChecker.GetCollsionStatus();
 
-        GrenadeUIUpdate();
+        PlayerGrenadeUIUpdate();
+        OpponentGrenadeUIUpdate();
         //}
     }
     public void ActivatePlayerSheild()
@@ -436,7 +437,7 @@ public class GameControl : MonoBehaviour
                 break;
         }
     }
-    public void GrenadeUIUpdate()//this is a normal throw
+    public void PlayerGrenadeUIUpdate()//this is a normal throw
     {
         // if(Input.GetMouseButtonDown(0) && playerGrenadeCounter > 0)
         // {
@@ -459,6 +460,23 @@ public class GameControl : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void OpponentGrenadeUIUpdate()
+    {
+        switch (oppGrenadeCounter)
+        {
+            case 1:
+                oppGrenade2.SetActive(false);
+                Debug.Log("oppGrenade2 gone, oppGrenadeCounter = 1");
+                break;
+            case 0:
+                oppGrenade1.SetActive(false);
+                Debug.Log("oppGrenade1 gone, oppGrenadeCounter = 0");
+                break;
+            default:
+                break;
+        }    
     }
 
     Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
@@ -485,7 +503,7 @@ public class GameControl : MonoBehaviour
         return result;
     }
 
-    public void LaunchGrenade()
+    public void PlayerLaunchGrenade()
     {
         //Ray camRay = arCamera.ScreenPointToRay(transform.position);
         RaycastHit hit;
@@ -520,6 +538,12 @@ public class GameControl : MonoBehaviour
             }
         }
         Debug.Log("PlacementDemo.LaunchGrenade has run");
+    }
+
+    public void OpponentLaunchGrenade()
+    {
+        oppGrenadeCounter--;
+        Debug.Log("opponent throws a grenade");
     }
 
 }
