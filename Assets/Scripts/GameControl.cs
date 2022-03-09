@@ -138,7 +138,7 @@ public class GameControl : MonoBehaviour
         OppenentReloadAction();
         collisionStatus = collisionChecker.GetCollsionStatus();
 
-        ThrowGrenade();
+        GrenadeUIUpdate();
         //}
     }
     public void ActivatePlayerSheild()
@@ -436,16 +436,16 @@ public class GameControl : MonoBehaviour
                 break;
         }
     }
-    public void ThrowGrenade()//this is a normal throw
+    public void GrenadeUIUpdate()//this is a normal throw
     {
-        if(Input.GetMouseButtonDown(0) && playerGrenadeCounter > 0)
-        {
-            GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
-            Rigidbody rb = grenade.GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * throwForce*2, ForceMode.VelocityChange);
-            Debug.Log("grenade throwed");
-            playerGrenadeCounter--;
-        }
+        // if(Input.GetMouseButtonDown(0) && playerGrenadeCounter > 0)
+        // {
+        //     GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+        //     Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        //     rb.AddForce(transform.forward * throwForce*2, ForceMode.VelocityChange);
+        //     Debug.Log("grenade throwed");
+        //     playerGrenadeCounter--;
+        // }
         switch (playerGrenadeCounter)
         {
             case 1:
@@ -510,6 +510,14 @@ public class GameControl : MonoBehaviour
         } else
         {
             //cursor.SetActive(false);
+            if(playerGrenadeCounter > 0)
+            {
+                GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+                Rigidbody rb = grenade.GetComponent<Rigidbody>();
+                rb.AddForce(transform.forward * throwForce*2, ForceMode.VelocityChange);
+                Debug.Log("grenade throwed");
+                playerGrenadeCounter--;
+            }
         }
         Debug.Log("PlacementDemo.LaunchGrenade has run");
     }
