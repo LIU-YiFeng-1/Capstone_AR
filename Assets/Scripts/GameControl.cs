@@ -6,7 +6,8 @@ using static CollisionChecker;
 //using static MainCanvas;
 public class GameControl : MonoBehaviour
 {
-    public CollisionChecker collisionChecker;
+    public CollisionChecker ammoPackCollisionChecker;
+    public CollisionChecker grenadeCollisionChecker;
     //public MainCanvas tutorialStatus;
     public GameObject arCamera;
     public Image oppHp;
@@ -19,6 +20,7 @@ public class GameControl : MonoBehaviour
     //following is for bullet
     private int bulletDamage = 10;
     //following is for grenade
+    private bool grenadeCollisionStatus;
     private int playerGrenadeCounter = 2;
     private int oppGrenadeCounter = 2;
     public GameObject grenadePrefab;
@@ -63,7 +65,7 @@ public class GameControl : MonoBehaviour
     private bool isReloadEnable;
     public float airCraftForce = 55.0f;
     private Vector3 ammoPackInitialLocaiton;
-    private bool collisionStatus;
+    private bool ammoPackCollisionStatus;
 
     public void ReStart()
     {
@@ -136,7 +138,8 @@ public class GameControl : MonoBehaviour
         PlayerUpdateAmmoCountUI();
         OpponentUpdateAmmoCOuntUI();
         OppenentReloadAction();
-        collisionStatus = collisionChecker.GetCollsionStatus();
+        ammoPackCollisionStatus = ammoPackCollisionChecker.GetAmmoPackCollsionStatus();
+        grenadeCollisionStatus = grenadeCollisionChecker.GetGrenadeCollisionStatus();
 
         PlayerGrenadeUIUpdate();
         OpponentGrenadeUIUpdate();
@@ -199,14 +202,14 @@ public class GameControl : MonoBehaviour
         }
 
         //actions for shield
-        if(currentOppShieldHp==0) {
+        if(currentOppShieldHp <= 0) {
             oppShield.SetActive(false);
             isOppShieldActive = false;
             currentOppShieldHp = maxShieldHp;
             Debug.Log("shield is down; shield is down due to damage taken!");
         }
 
-        if(currentOppHp==0) {
+        if(currentOppHp <= 0) {
             Debug.Log("Oppenent died!");
         }
     }
@@ -233,14 +236,14 @@ public class GameControl : MonoBehaviour
         }
 
         //actions for shield
-        if(currentPlayerShieldHp==0) {
+        if(currentPlayerShieldHp <=0 ) {
             playerShield.SetActive(false);
             isPlayerShieldActive = false;
             currentPlayerShieldHp = maxShieldHp;
             Debug.Log("shield is down; shield is down due to damage taken!");
         }
 
-        if(currentPlayerHp==0) {
+        if(currentPlayerHp <= 0) {
             Debug.Log("player died!");
         }
     }
@@ -358,9 +361,9 @@ public class GameControl : MonoBehaviour
             Destroy(ammoPackObj, 3.5f);
         }
         
-        if(collisionStatus)
+        if(ammoPackCollisionStatus)
         {
-            Debug.Log("Gamecontrol module detects a collsion");
+            Debug.Log("Gamecontrol module detects an ammo pack collsion");
         }
             
         isReloadEnable = false;
@@ -525,6 +528,32 @@ public class GameControl : MonoBehaviour
             Debug.Log("PlacementDemo.LaunchGrenade.ifStatement has run");
             playerGrenadeCounter--;
 
+
+            if(isOppShieldActive)
+            {
+                currentOppShieldHp -= grenadeDamage;
+                oppShieldHp.fillAmount = (float)currentOppShieldHp / (float)maxShieldHp;           
+                Debug.Log("opponent gets hit by grenade but shield is up; update oppShieldHp accordingly");
+            } else
+            {
+                currentOppHp -= grenadeDamage;
+                oppHp.fillAmount = (float)currentOppHp / (float)maxHp;           
+                Debug.Log("opponent is hit by grenade and is without shield; update oppHp accordingly");
+            }
+
+            //actions for shield
+            if(currentOppShieldHp <= 0) 
+            {
+                oppShield.SetActive(false);
+                isOppShieldActive = false;
+                currentOppShieldHp = maxShieldHp;
+                Debug.Log("opponent shield is down; shield is down due to damage taken!");
+            }
+
+            if(currentOppHp <= 0) {
+                Debug.Log("opponent died!");
+            }
+
         } else
         {
             //cursor.SetActive(false);
@@ -540,10 +569,42 @@ public class GameControl : MonoBehaviour
         Debug.Log("PlacementDemo.LaunchGrenade has run");
     }
 
+    //for grenade throw by opponent, alwasy assume it is a hit
+    //will be adjust later when external comms comes in
     public void OpponentLaunchGrenade()
     {
         oppGrenadeCounter--;
         Debug.Log("opponent throws a grenade");
+
+
+        if(oppGrenadeCounter < 0)
+        {
+            return;
+        }
+
+        if(isPlayerShieldActive)
+        {
+                currentPlayerShieldHp -= grenadeDamage;
+                playerShieldHp.fillAmount = (float)currentPlayerShieldHp / (float)maxShieldHp;           
+                Debug.Log("player gets hit by grenade but shield is up; update playerShieldHp accordingly");
+        } else
+        {
+            currentPlayerHp -= grenadeDamage;
+            playerHp.fillAmount = (float)currentPlayerHp / (float)maxHp;           
+            Debug.Log("player is hit by grenade and is without shield; update playerHp accordingly");
+        }
+
+        //actions for shield
+        if(currentPlayerShieldHp <= 0) {
+            playerShield.SetActive(false);
+            isPlayerShieldActive = false;
+            currentPlayerShieldHp = maxShieldHp;
+            Debug.Log("shield is down; shield is down due to damage taken!");
+        }
+
+        if(currentPlayerHp <= 0) {
+            Debug.Log("player died!");
+        }
     }
 
 }

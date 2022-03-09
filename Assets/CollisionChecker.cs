@@ -4,24 +4,40 @@ using UnityEngine;
 
 public class CollisionChecker : MonoBehaviour
 {
-    private bool isCollsionDetected = false;
+    private bool isAmmoPackCollisionDetected = false;
+    private bool isGrenadeCollisionDetected = false;
     public void OnCollisionEnter(Collision collision)
     {   
         if(collision.gameObject.name == "Ammo_box(Clone)")
         {
             //This is example
-            Debug.Log("collision detected");
-            isCollsionDetected = true;
+            Debug.Log("ammo pack collision detected!");
+            isAmmoPackCollisionDetected = true;
             //code your thing here
-        } else 
+        } else
         {
-            Debug.Log("no collsion!");
-            isCollsionDetected = false;
+            Debug.Log("no ammo pack collsion!");
+            isAmmoPackCollisionDetected = false;
         }
+
+       if(collision.gameObject.name == "WPN_MK2Grenade 1(Clone)")
+       {
+           Debug.Log("Grenade collision detected!");
+           isGrenadeCollisionDetected = true;
+       } else 
+       {
+            Debug.Log("no grenade collsion!");
+            isGrenadeCollisionDetected = false;
+       }
     }
 
-    public bool GetCollsionStatus()
+    public bool GetAmmoPackCollsionStatus()
     {
-        return isCollsionDetected;
+        return isAmmoPackCollisionDetected;
+    }
+
+    public bool GetGrenadeCollisionStatus()
+    {
+        return isGrenadeCollisionDetected;
     }
 }
